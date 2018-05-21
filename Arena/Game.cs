@@ -10,11 +10,47 @@ namespace Arena
 
         public Game()
         {
-            StartGame();
+            Intro();
+           
+        }
+
+        public void Intro()
+        {
+            Console.WriteLine("Press 1 to start a New Game");
+            Console.WriteLine("Or type the name of character\nyou wish to load");
+            var input = Console.ReadLine();
+            if (input != "1")
+            {
+                LoadCharacter(input);
+            }
+            else
+            {
+                StartNewGame();
+            }
         }
         
+        public void LoadCharacter(string charactername)
+        {
+            foreach(string file in Directory.EnumerateFiles("./", charactername+"*.txt"))
+            {
+                string toLoad = File.ReadAllText(file);
+                if(toLoad==null)
+                {
+                    Console.WriteLine("No Character match that name, make\n sure the character file is in the folder");
+                    Intro();
+                }
+                Console.WriteLine(toLoad);
+                LoadToGame(toLoad);
+            }
+            Console.ReadLine();
+        }
 
-        public void StartGame()
+        public void LoadToGame(string toload)
+        {
+
+        }
+
+        public void StartNewGame()
         {
             ArenaPrompt();
             player = new Player();
@@ -34,6 +70,7 @@ namespace Arena
             FileStream ostrm;
             StreamWriter writer;
             TextWriter oldOut = Console.Out;
+            PrintPlayer();
             try
             {
                 ostrm = new FileStream("./"+player.name+".txt", FileMode.OpenOrCreate, FileAccess.Write);
